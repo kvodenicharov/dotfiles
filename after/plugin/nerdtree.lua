@@ -29,8 +29,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- Close Neovim if NERDTree is the only window left
 vim.cmd([[
     autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-]])
-vim.cmd([[
     autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 ]])
 

@@ -27,6 +27,7 @@ return require("packer").startup(function(use)
 
 	use({ "akinsho/bufferline.nvim", tag = "*" })
 
+	use({ "goolord/alpha-nvim" })
 	use({ "preservim/nerdtree" })
 	use({ "Xuyuanp/nerdtree-git-plugin" })
 	use({ "ryanoasis/vim-devicons" })
@@ -49,6 +50,7 @@ return require("packer").startup(function(use)
 	use({ "hrsh7th/cmp-buffer" })
 
 	use({ "kylechui/nvim-surround" })
+	use({ "gbprod/substitute.nvim" })
 
 	use({ "williamboman/mason.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })

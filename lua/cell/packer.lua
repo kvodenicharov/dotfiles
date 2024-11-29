@@ -48,6 +48,8 @@ return require("packer").startup(function(use)
 
 	use({ "hrsh7th/cmp-buffer" })
 
+	use({ "kylechui/nvim-surround" })
+
 	use({ "williamboman/mason.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })
 	use({

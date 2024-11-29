@@ -5,6 +5,7 @@ vim.cmd([[packadd packer.nvim]])
 return require("packer").startup(function(use)
 	-- Packer can manage itself
 	use("wbthomason/packer.nvim")
+	use({ "nvim-tree/nvim-web-devicons" })
 
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -20,17 +21,19 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "nvim-tree/nvim-web-devicons", opt = true },
-	})
+	use({ "nvim-lualine/lualine.nvim" })
 
 	use({ "akinsho/bufferline.nvim", tag = "*" })
+
+	use({
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+	})
 
 	use({ "goolord/alpha-nvim" })
 	use({ "preservim/nerdtree" })
 	use({ "Xuyuanp/nerdtree-git-plugin" })
-	use({ "ryanoasis/vim-devicons" })
+
 	use({ "tiagofumo/vim-nerdtree-syntax-highlight" })
 
 	use({

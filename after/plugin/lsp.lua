@@ -63,6 +63,8 @@ require("conform").setup({
 		graphql = { "prettier" },
 		lua = { "stylua" },
 		python = { "isort", "black" },
+		sql = { "sql-formatter" },
+		["_"] = { "trim_whitespace" },
 	},
 	format_on_save = {
 		lsp_fallback = true,

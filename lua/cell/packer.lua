@@ -25,10 +25,7 @@ return require("packer").startup(function(use)
 
 	use({ "akinsho/bufferline.nvim", tag = "*" })
 
-	use({
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-	})
+	use({ "folke/which-key.nvim" })
 
 	use({ "goolord/alpha-nvim" })
 	use({ "preservim/nerdtree" })

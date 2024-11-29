@@ -7,7 +7,6 @@ return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 	use({ "nvim-tree/nvim-web-devicons" })
 
-	use({ "stevearc/dressing.nvim" })
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -45,6 +44,7 @@ return require("packer").startup(function(use)
 	use({ "mbbill/undotree" })
 	use({ "terryma/vim-multiple-cursors" })
 
+	use({ "folke/trouble.nvim" })
 	use({ "neovim/nvim-lspconfig" })
 	use({ "hrsh7th/nvim-cmp" })
 	use({ "hrsh7th/cmp-nvim-lsp" })

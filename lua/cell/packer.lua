@@ -7,6 +7,7 @@ return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 	use({ "nvim-tree/nvim-web-devicons" })
 
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use({
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.x",

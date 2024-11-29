@@ -1,60 +1,63 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 -- Only required if you have packer configured as `opt`
-vim.cmd [[packadd packer.nvim]]
+vim.cmd([[packadd packer.nvim]])
 
-return require('packer').startup(function(use)
-    -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
+return require("packer").startup(function(use)
+	-- Packer can manage itself
+	use("wbthomason/packer.nvim")
 
-    use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.x',
-        requires = { {'nvim-lua/plenary.nvim'} }
-    }
+	use({
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.x",
+		requires = { { "nvim-lua/plenary.nvim" } },
+	})
 
-    use({
-        "folke/tokyonight.nvim",
-        as = "tokyonight",
-        config = function ()
-            vim.cmd('colorscheme tokyonight')
-        end
-    })
+	use({
+		"folke/tokyonight.nvim",
+		as = "tokyonight",
+		config = function()
+			vim.cmd("colorscheme tokyonight")
+		end,
+	})
 
+	use({
+		"nvim-lualine/lualine.nvim",
+		requires = { "nvim-tree/nvim-web-devicons", opt = true },
+	})
 
-    use {
-        'nvim-lualine/lualine.nvim',
-        requires = { 'nvim-tree/nvim-web-devicons', opt = true }
-    }
+	use({ "preservim/nerdtree" })
+	use({ "Xuyuanp/nerdtree-git-plugin" })
+	use({ "ryanoasis/vim-devicons" })
+	use({ "tiagofumo/vim-nerdtree-syntax-highlight" })
 
-    use { 'preservim/nerdtree' }
-    use { 'Xuyuanp/nerdtree-git-plugin'}
-    use { 'ryanoasis/vim-devicons' }
-    use { 'tiagofumo/vim-nerdtree-syntax-highlight' }
+	use({
+		"rose-pine/neovim",
+		as = "rose-pine",
+	})
 
-    use({
-        'rose-pine/neovim',
-        as = 'rose-pine',
-    })
+	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use({ "theprimeagen/harpoon" })
+	use({ "mbbill/undotree" })
+	use({ "terryma/vim-multiple-cursors" })
 
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { 'theprimeagen/harpoon' }
-    use { 'mbbill/undotree' }
-    use { 'terryma/vim-multiple-cursors' }
+	use({ "neovim/nvim-lspconfig" })
+	use({ "hrsh7th/nvim-cmp" })
+	use({ "hrsh7th/cmp-nvim-lsp" })
 
-    use({'neovim/nvim-lspconfig'})
-    use({'hrsh7th/nvim-cmp'})
-    use({'hrsh7th/cmp-nvim-lsp'})
+	use({ "hrsh7th/cmp-buffer" })
 
-    use({'hrsh7th/cmp-buffer'})
+	use({ "williamboman/mason.nvim" })
+	use({ "williamboman/mason-lspconfig.nvim" })
+	use({
+		"mfussenegger/nvim-lint",
+		as = "lint",
+	})
+	use({ "rshkarin/mason-nvim-lint" })
+	use({ "stevearc/conform.nvim" })
 
-    use({'williamboman/mason.nvim'})
-    use({"williamboman/mason-lspconfig.nvim"})
-    use({"mfussenegger/nvim-lint"})
-    use({"rshkarin/mason-nvim-lint"})
-
-    use({
-        "L3MON4D3/LuaSnip",
-        tag = "v2.*",
-        run = "make install_jsregexp"
-    })
-
+	use({
+		"L3MON4D3/LuaSnip",
+		tag = "v2.*",
+		run = "make install_jsregexp",
+	})
 end)

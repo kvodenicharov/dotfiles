@@ -34,12 +34,11 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	--[[
 	use({
 		"rmagatti/auto-session",
 		config = function()
 			require("auto-session").setup({
-				enabled = false,
+				enabled = true,
 				auto_restore = false,
 				auto_restore_last_session = false,
 				suppressed_dirs = { "~/", "~/Downloads", "/" },
@@ -54,8 +53,6 @@ return require("packer").startup(function(use)
 			})
 		end,
 	})
-    ]]
-	--
 
 	use({ "nvim-lualine/lualine.nvim" })
 
@@ -66,9 +63,7 @@ return require("packer").startup(function(use)
 	use({
 		"goolord/alpha-nvim",
 		config = function()
-			local startify = require("alpha.themes.startify")
-			startify.file_icons.provider = "devicons"
-			require("alpha").setup(startify.config)
+			require("alpha").setup(require("alpha.themes.theta").config)
 		end,
 	})
 	use({

@@ -22,6 +22,16 @@ return require("packer").startup(function(use)
 		end,
 	})
 
+	use({ "windwp/nvim-ts-autotag" })
+
+	use({
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	})
+
 	use({ "nvim-lualine/lualine.nvim" })
 
 	use({ "akinsho/bufferline.nvim", tag = "*" })

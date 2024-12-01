@@ -24,6 +24,8 @@ return require("packer").startup(function(use)
 
 	use({ "windwp/nvim-ts-autotag" })
 
+	use({ "lukas-reineke/indent-blankline.nvim" })
+
 	use({
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -31,6 +33,29 @@ return require("packer").startup(function(use)
 			require("nvim-autopairs").setup({})
 		end,
 	})
+
+	--[[
+	use({
+		"rmagatti/auto-session",
+		config = function()
+			require("auto-session").setup({
+				enabled = false,
+				auto_restore = false,
+				auto_restore_last_session = false,
+				suppressed_dirs = { "~/", "~/Downloads", "/" },
+
+				vim.keymap.set("n", "<leader>wr", "<cmd>SessionRestore<CR>", { desc = "Restore session for cwd" }),
+				vim.keymap.set(
+					"n",
+					"<leader>ws",
+					"<cmd>SessionSave<CR>",
+					{ desc = "Save session for auto session root dir" }
+				),
+			})
+		end,
+	})
+    ]]
+	--
 
 	use({ "nvim-lualine/lualine.nvim" })
 
@@ -66,6 +91,8 @@ return require("packer").startup(function(use)
 
 	use({ "williamboman/mason.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })
+	use({ "WhoIsSethDaniel/mason-tool-installer.nvim" })
+
 	use({
 		"mfussenegger/nvim-lint",
 		as = "lint",

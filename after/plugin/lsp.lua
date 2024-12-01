@@ -47,6 +47,23 @@ require("mason-lspconfig").setup_handlers({
 	end,
 })
 
+require("mason-tool-installer").setup({
+	auto_update = true,
+	run_on_start = true,
+	start_delay = 3000,
+	ensure_installed = {
+		"lua-language-server",
+		"vim-language-server",
+		"stylua",
+		"shellcheck",
+		"editorconfig-checker",
+		"luacheck",
+		"shellcheck",
+		"shfmt",
+		"vint",
+	},
+})
+
 -- Formatting
 require("conform").setup({
 	formatters_by_ft = {

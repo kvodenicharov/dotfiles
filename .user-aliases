@@ -1,0 +1,29 @@
+# OS
+alias cat='bat'
+alias ll="eza -la -g --icons"
+alias ls="eza --icons"
+alias lt="eza --tree --icons -a -I '.git|__pycache__|.mypy_cache|.ipynb_checkpoints'"
+alias as="alias | grep"
+alias vim="nvim"
+
+# DOCKER
+alias doc='docker-compose'
+alias docu='docker-compose up -d'
+alias doce='docker-compose exec'
+alias d='docker'
+
+# Podman
+alias p='podman'
+alias pc='podman-compose'
+alias pcu='podman-compose up'
+alias pcud='podman-compose up -d'
+alias pce='podman-compose exec'
+
+alias docker=podman
+alias docker-compose=podman-compose
+
+alias kb="sudo hidutil property --set '{\"UserKeyMapping\":[{\"HIDKeyboardModifierMappingSrc\":0x700000035,\"HIDKeyboardModifierMappingDst\":0x700000064},{\"HIDKeyboardModifierMappingSrc\":0x700000064,\"HIDKeyboardModifierMappingDst\":0x700000035}]}'"
+
+t() {
+    tail -f "$1" | bat --paging=never -l log
+}

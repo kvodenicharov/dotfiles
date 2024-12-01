@@ -5,6 +5,7 @@ FILES_TO_SYMLINK=(
     "nvim:$HOME/.config/nvim"
     ".zshrc:$HOME/.zshrc"
     ".user-aliases:$HOME/.user-aliases"
+    ".p10k.zsh:$HOME/.p10k.zsh"
 )
 
 # Define colors

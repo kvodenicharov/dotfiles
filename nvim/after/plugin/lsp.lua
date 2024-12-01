@@ -80,6 +80,7 @@ require("conform").setup({
 		graphql = { "prettier" },
 		lua = { "stylua" },
 		python = { "isort", "black" },
+		bash = { "beautysh" },
 		sql = { "sql-formatter" },
 		["_"] = { "trim_whitespace" },
 	},
@@ -111,6 +112,7 @@ require("lint").linters_by_ft = {
 	typescriptreact = { "eslint_d" },
 	svelte = { "eslint_d" },
 	python = { "pylint" },
+	bash = { "shellcheck" },
 }
 
 vim.keymap.set("n", "<leader>l", function()

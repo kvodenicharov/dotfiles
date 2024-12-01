@@ -54,6 +54,7 @@ require("mason-tool-installer").setup({
 	ensure_installed = {
 		"lua-language-server",
 		"vim-language-server",
+		"sonarlint-language-server",
 		"stylua",
 		"shellcheck",
 		"editorconfig-checker",
@@ -82,6 +83,7 @@ require("conform").setup({
 		python = { "isort", "black" },
 		bash = { "beautysh" },
 		sql = { "sql-formatter" },
+		php = { "phpcbf" },
 		["_"] = { "trim_whitespace" },
 	},
 	format_on_save = {
@@ -112,6 +114,7 @@ require("lint").linters_by_ft = {
 	typescriptreact = { "eslint_d" },
 	svelte = { "eslint_d" },
 	python = { "pylint" },
+	php = { "phpstan", "phpcs" },
 	bash = { "shellcheck" },
 }
 

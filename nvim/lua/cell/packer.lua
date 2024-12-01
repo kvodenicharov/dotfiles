@@ -73,6 +73,7 @@ return require("packer").startup(function(use)
 			-- Global Config
 			vim.g.NERDTreeDirArrowExpandable = "▸"
 			vim.g.NERDTreeDirArrowCollapsible = "▾"
+			vim.g.NERDTreeShowHidden = 1
 
 			-- Keymaps
 			vim.keymap.set("n", "<leader>n", ":NERDTreeFocus<CR>", { noremap = true, silent = true })

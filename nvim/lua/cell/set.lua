@@ -32,4 +32,4 @@ vim.opt.encoding = "UTF-8"
 
 vim.opt.termguicolors = true
 
-vim.colorscheme = "tokyonight"
+vim.opt.signcolumn = "yes"

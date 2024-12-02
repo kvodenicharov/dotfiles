@@ -66,43 +66,30 @@ return require("packer").startup(function(use)
 			require("alpha").setup(require("alpha.themes.theta").config)
 		end,
 	})
+
 	use({
-		"preservim/nerdtree",
-		requires = { "goolord/alpha-nvim" },
+		"echasnovski/mini.nvim",
 		config = function()
-			-- Global Config
-			vim.g.NERDTreeDirArrowExpandable = "▸"
-			vim.g.NERDTreeDirArrowCollapsible = "▾"
-			vim.g.NERDTreeShowHidden = 1
+			require("mini.ai").setup()
+			require("mini.files").setup({
+				windows = {
+					preview = true,
+					width_preview = 50,
+				},
+				vim.keymap.set("n", "<leader>fe", "<cmd>lua MiniFiles.open()<CR>", { desc = "File Explorer" }),
+			})
+			require("mini.icons").setup()
 
-			-- Keymaps
-			vim.keymap.set("n", "<leader>n", ":NERDTreeFocus<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<C-n>", ":NERDTree<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<C-t>", ":NERDTreeToggle<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<C-f>", ":NERDTreeFind<CR>", { noremap = true, silent = true })
+			local notify = require("mini.notify")
 
-			vim.cmd([[
-                autocmd StdinReadPre * let s:std_in=1
-
-                " Open NT & focus main window
-                autocmd VimEnter * NERDTree | wincmd p
-
-                " Navigate to selected dir if passed as argument
-                autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-                    \ execute 'NERDTree' argv()[0] | wincmd w | execute "Alpha" | execute 'cd '.argv()[0] | endif
-
-                " Mirror tree on separate tabs
-                autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
-
-                " Close editor if NT is the only buffer left
-                autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-                autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-            ]])
+			notify.setup()
+			vim.notify = notify.make_notify({
+				ERROR = { duration = 5000 },
+				WARN = { duration = 4000 },
+				INFO = { duration = 3000 },
+			})
 		end,
 	})
-	use({ "Xuyuanp/nerdtree-git-plugin" })
-
-	use({ "tiagofumo/vim-nerdtree-syntax-highlight" })
 
 	use({
 		"rose-pine/neovim",

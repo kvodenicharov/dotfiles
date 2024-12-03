@@ -1,6 +1,6 @@
 return {
 	"mfussenegger/nvim-lint",
-	config = function(_, opts)
+	config = function(_)
 		local linter = require("lint")
 		linter.linters_by_ft = {
 			javascript = { "eslint_d" },
@@ -18,3 +18,4 @@ return {
 		end, { desc = "Lint Trigger" })
 	end,
 }
+

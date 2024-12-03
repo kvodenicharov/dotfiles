@@ -1,8 +1,8 @@
 return {
 	"williamboman/mason-lspconfig.nvim",
-	dependencies = { 
+	dependencies = {
 		"williamboman/mason.nvim",
-		"neovim/nvim-lspconfig" 
+		"neovim/nvim-lspconfig",
 	},
 	opts = {
 		automatic_installation = true,
@@ -10,7 +10,7 @@ return {
 			function(server_name)
 				require("lspconfig")[server_name].setup({})
 			end,
-		}
+		},
 	},
 	config = function(_, opts)
 		local mlc = require("mason-lspconfig")
@@ -23,3 +23,4 @@ return {
 		})
 	end,
 }
+

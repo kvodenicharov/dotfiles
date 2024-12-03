@@ -25,7 +25,7 @@ return {
 			lsp_fallback = true,
 			async = false,
 			timeout_ms = 1000,
-		}
+		},
 	},
 	config = function(_, opts)
 		local c = require("conform")
@@ -40,3 +40,4 @@ return {
 		end)
 	end,
 }
+

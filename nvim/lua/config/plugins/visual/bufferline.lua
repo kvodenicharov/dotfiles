@@ -1,6 +1,6 @@
 return {
 	"akinsho/bufferline.nvim",
-	version = "*", 
+	version = "*",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = {
 		options = {
@@ -11,15 +11,7 @@ return {
 				delay = 100,
 				reveal = { "close" },
 			},
-			offsets = {
-				{
-					filetype = "nerdtree",
-					text = "File Explorer",
-					highlight = "Directory",
-					text_align = "center",
-				},
-			},
-		}
+		},
 	},
 	config = function(_, opts)
 		require("bufferline").setup(opts)

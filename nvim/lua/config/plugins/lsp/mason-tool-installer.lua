@@ -1,8 +1,8 @@
 return {
 	"WhoIsSethDaniel/mason-tool-installer.nvim",
-	dependencies = { 
+	dependencies = {
 		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim"
+		"williamboman/mason-lspconfig.nvim",
 	},
 	opts = {
 		auto_update = true,
@@ -19,6 +19,7 @@ return {
 			"shellcheck",
 			"shfmt",
 			"vint",
-		}
+		},
 	},
 }
+

@@ -27,3 +27,4 @@ return {
 		require("alpha").setup(theme.config)
 	end,
 }
+

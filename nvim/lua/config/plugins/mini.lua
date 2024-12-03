@@ -10,7 +10,7 @@ return {
 			},
 		})
 		vim.keymap.set("n", "<leader>fe", "<cmd>lua MiniFiles.open()<CR>", { desc = "File Explorer" })
-		
+
 		require("mini.icons").setup()
 
 		local notify = require("mini.notify")
@@ -23,3 +23,4 @@ return {
 		})
 	end,
 }
+

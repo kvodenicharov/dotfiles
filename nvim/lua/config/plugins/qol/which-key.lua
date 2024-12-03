@@ -1,7 +1,7 @@
 return {
 	"folke/which-key.nvim",
 	opts = {
-		preset = "modern"
+		preset = "modern",
 	},
 	config = function(_, opts)
 		require("which-key").setup(opts)
@@ -14,10 +14,11 @@ return {
 		)
 
 		vim.keymap.set(
-		    "n",
-		    "<leader>g?",
-		    [[<Cmd>lua require("which-key").show({ global = true })<CR>]],
-		    { noremap = true, silent = true, desc = "Global Keymaps (which-key)" }
+			"n",
+			"<leader>g?",
+			[[<Cmd>lua require("which-key").show({ global = true })<CR>]],
+			{ noremap = true, silent = true, desc = "Global Keymaps (which-key)" }
 		)
 	end,
 }
+

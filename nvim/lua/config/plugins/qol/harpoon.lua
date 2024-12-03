@@ -8,9 +8,9 @@ return {
 		require("telescope").load_extension("harpoon")
 		vim.keymap.set("n", "<leader>fh", "<cmd>Telescope harpoon marks<CR>", { desc = "Harpoon Marks" })
 
-		vim.keymap.set("n", "<leader>a", mark.add_file)
+		vim.keymap.set("n", "<leader>ha", mark.add_file)
 		vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
-		vim.keymap.set("n", "<leader>u", mark.rm_file, { desc = "Unmark File" })
+		vim.keymap.set("n", "<leader>hu", mark.rm_file, { desc = "Unmark File" })
 
 		for i = 1, 9 do
 			vim.keymap.set("n", "<C-" .. i .. ">", function()

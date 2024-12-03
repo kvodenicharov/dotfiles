@@ -28,7 +28,7 @@ return {
 		sections = {
 			lualine_a = { "mode" },
 			lualine_b = { "branch", "diff", "diagnostics" },
-			lualine_c = { { "filename", path = 3 } },
+			lualine_c = { { "filename", path = 1 } },
 			lualine_x = {
 				{ require("gitblame").get_current_blame_text, cond = require("gitblame").is_blame_text_available },
 				"encoding",
@@ -48,12 +48,6 @@ return {
 		tabline = {},
 		winbar = {},
 		inactive_winbar = {},
-		extensions = {
-			"fzf",
-			"lazy",
-			"mason",
-			"trouble",
-			"quickfix",
-		},
+		extensions = {},
 	},
 }

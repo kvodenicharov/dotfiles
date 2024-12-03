@@ -11,6 +11,11 @@ return {
 				delay = 100,
 				reveal = { "close" },
 			},
+			offset = {
+				filetype = "undotree",
+				text = "UndoTree",
+				separator = true,
+			},
 		},
 	},
 	config = function(_, opts)

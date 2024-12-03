@@ -12,6 +12,7 @@ return {
 			sources = {
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
+				{ name = "luasnip" },
 			},
 			mapping = cmp.mapping.preset.insert({
 				-- Navigate between completion items
@@ -48,4 +49,3 @@ return {
 		})
 	end,
 }
-

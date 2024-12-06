@@ -4,9 +4,9 @@ return {
 		vim.o.undofile = true
 		vim.o.undodir = vim.fn.stdpath("data") .. "/undo"
 
-		vim.keymap.set("n", "<leader>u", function()
-			vim.cmd.UndotreeToggle()
-			vim.cmd.UndotreeFocus()
-		end, { desc = "Undo Tree Toggle and Focus" })
+		vim.g.undotree_SetFocusWhenToggle = 1
+		vim.g.undotree_WindowLayout = 2
+
+		vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Undo Tree Toggle" })
 	end,
 }

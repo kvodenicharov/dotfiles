@@ -55,6 +55,7 @@ export FZF_DEFAULT_OPTS='--height=40% --preview="cat {}" --preview-window=right:
 
 source $ZSH/oh-my-zsh.sh
 source ~/.user-aliases
+source ~/.user-secrets
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -64,3 +65,6 @@ export PATH=$HOME/.ops-helpers:$PATH
 export GPG_TTY=$(tty)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

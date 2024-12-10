@@ -64,6 +64,8 @@ export PATH=$HOME/.ops-helpers:$PATH
 
 export GPG_TTY=$(tty)
 
+eval $(thefuck --alias)
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export SDKMAN_DIR="$HOME/.sdkman"

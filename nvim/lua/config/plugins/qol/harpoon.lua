@@ -6,7 +6,7 @@ return {
 		local ui = require("harpoon.ui")
 
 		require("telescope").load_extension("harpoon")
-		vim.keymap.set("n", "<leader>fh", "<cmd>Telescope harpoon marks<CR>", { desc = "Harpoon Marks" })
+		vim.keymap.set("n", "<leader>fm", "<cmd>Telescope harpoon marks<CR>", { desc = "Harpoon Marks" })
 
 		vim.keymap.set("n", "<leader>ha", mark.add_file)
 		vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)

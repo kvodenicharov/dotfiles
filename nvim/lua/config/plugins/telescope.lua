@@ -42,7 +42,7 @@ return {
 			vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "Find Treesitter Commands" })
 			vim.keymap.set("n", "<leader>fv", builtin.vim_options, { desc = "Find Vim Opts" })
 			vim.keymap.set("n", "<leader>fc", builtin.command_history, { desc = "Find Commands" })
-			vim.keymap.set("n", "<leader>fm", builtin.man_pages, { desc = "Find Man Pages" })
+			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find Help" })
 		end,
 	},
 }

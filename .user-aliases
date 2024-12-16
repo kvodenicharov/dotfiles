@@ -5,6 +5,7 @@ alias ls="eza --icons"
 alias lt="eza --tree --icons -a -I '.git|__pycache__|.mypy_cache|.ipynb_checkpoints'"
 alias as="alias | grep"
 alias vim="nvim"
+alias f="fuck"
 
 # DOCKER
 alias doc='docker-compose'

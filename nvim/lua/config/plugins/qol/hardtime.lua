@@ -4,5 +4,11 @@ return {
 	opts = {
 		restriction_mode = "hint",
 		disable_mouse = false, -- Warp-fuckery resolved!
+		disabled_keys = {
+			["<Up>"] = { "n" },
+			["<Down>"] = { "n" },
+			["<Left>"] = { "n" },
+			["<Right>"] = { "n" },
+		},
 	},
 }

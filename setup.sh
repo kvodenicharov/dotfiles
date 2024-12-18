@@ -6,6 +6,7 @@ FILES_TO_SYMLINK=(
     ".zshrc:$HOME/.zshrc"
     ".user-aliases:$HOME/.user-aliases"
     ".p10k.zsh:$HOME/.p10k.zsh"
+    "macos/mouseless.yaml:$HOME/Library/Containers/net.sonuscape.mouseless/Data/.mouseless/configs/config.yaml"
 )
 
 # Define colors

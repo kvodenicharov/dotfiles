@@ -1,0 +1,8 @@
+---
+name: Alfred
+windows:
+  - tabs:
+      - layout:
+          cwd: $(~)
+          commands:
+            - exec: echo "hello"

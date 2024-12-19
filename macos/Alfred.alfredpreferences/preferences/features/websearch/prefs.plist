@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customSites</key>
+	<dict>
+		<key>1D781F12-E52E-4A3A-9524-E375859DCA8B</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>ghr</string>
+			<key>text</key>
+			<string>GitHub Repositories</string>
+			<key>url</key>
+			<string>https://github.com/search?q=org%3AYotpoLtd+{query}&amp;type=repositories</string>
+		</dict>
+		<key>6284E6D3-BC1C-4C10-87E9-E81C95BF28A4</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>b</string>
+			<key>text</key>
+			<string>BackOffice</string>
+			<key>url</key>
+			<string>https://backoffice.yotpo.com/#/stores?search={query}</string>
+		</dict>
+		<key>D0A5A2D3-51FF-407F-9B45-4CF3DD353B69</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>ghc</string>
+			<key>text</key>
+			<string>Github Code</string>
+			<key>url</key>
+			<string>https://github.com/search?q=org%3AYotpoLtd%20{query}&amp;type=code</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

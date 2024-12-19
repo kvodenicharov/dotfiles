@@ -16,6 +16,13 @@ return {
 			"toml",
 			"rust",
 			"go",
+			"dockerfile",
+			"java",
+			"lua",
+			"make",
+			"php",
+			"terraform",
+			"vim",
 		},
 		sync_install = false,
 		auto_install = true,
@@ -37,4 +44,7 @@ return {
 			},
 		},
 	},
+	config = function(_, opts)
+		require("nvim-treesitter.configs").setup(opts)
+	end,
 }

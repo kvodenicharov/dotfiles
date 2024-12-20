@@ -24,6 +24,15 @@ return {
 			[[                     |   |                                ]],
 		}
 
-		require("alpha").setup(theme.config)
+		local alpha = require("alpha")
+		alpha.setup(theme.config)
+
+		vim.api.nvim_create_autocmd("VimEnter", {
+			callback = function()
+				if vim.fn.isdirectory(vim.fn.argv()[1]) == 1 then
+					alpha.start()
+				end
+			end,
+		})
 	end,
 }

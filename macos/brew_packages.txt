@@ -5,7 +5,6 @@ aom
 apr
 apr-util
 argon2
-aspell
 autoconf
 aws-sam-cli
 awscli
@@ -107,6 +106,7 @@ luv
 lz4
 lzo
 m4
+make
 maven
 mkcert
 mpdecimal
@@ -116,6 +116,7 @@ mysql-client
 navi
 ncurses
 neovim
+net-snmp
 nettle
 nginx
 nmap
@@ -127,7 +128,6 @@ openexr
 openjdk
 openjdk@11
 openldap
-openssl@1.1
 openssl@3
 p11-kit
 pcre2
@@ -157,7 +157,6 @@ readline
 ripgrep
 rtmpdump
 siege
-six
 sqlfluff
 sqlite
 syncthing
@@ -190,14 +189,17 @@ another-redis-desktop-manager
 arc
 bartender
 betterdisplay
+cleanshot
 discord
 firefox
 flameshot
 font-hack-nerd-font
+jagex
 keepingyouawake
 maccy
 mailbird
 messenger
+mouseless
 notion
 notion-calendar
 podman-desktop

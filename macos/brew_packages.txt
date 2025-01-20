@@ -17,11 +17,16 @@ certifi
 cffi
 cheat
 cmake
+colima
 composer
 consul
 coreutils
 cryptography
 curl
+docker
+docker-buildx
+docker-completion
+docker-compose
 docker-credential-helper
 duf
 eza
@@ -97,6 +102,7 @@ libxext
 libxrender
 libyaml
 libzip
+lima
 little-cms2
 lpeg
 lua
@@ -136,8 +142,7 @@ php
 pinentry
 pinentry-mac
 pixman
-podman
-podman-compose
+presenterm
 protobuf
 pstree
 pycparser
@@ -194,6 +199,7 @@ discord
 firefox
 flameshot
 font-hack-nerd-font
+ghostty
 jagex
 keepingyouawake
 maccy

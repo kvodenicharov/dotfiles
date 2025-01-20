@@ -5,11 +5,10 @@ font-size = 16
 # Themes
 theme = dark:tokyonight_moon,light:tokyonight-day
 
-
 # Quick Terminal
-keybind = global:f2=toggle_quick_terminal
-
+keybind = global:f1=toggle_quick_terminal
 quick-terminal-position = top
 
+#
 shell-integration = zsh
 shell-integration-features = sudo

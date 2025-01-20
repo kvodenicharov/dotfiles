@@ -70,3 +70,9 @@ eval $(thefuck --alias)
 
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export LIMA_HOME="/Users/kiril.vodenicharov/.colima/_lima/"
+export COLIMA_HOME="/Users/kiril.vodenicharov/.colima"
+export DOCKER_HOST="unix://${COLIMA_HOME}/default/docker.sock"
+
+export XDG_CONFIG_HOME=$HOME/.config

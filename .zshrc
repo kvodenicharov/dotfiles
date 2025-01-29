@@ -17,24 +17,27 @@ plugins=(
 	thefuck
 	sudo
     warhol
-    fzf
-	zsh-syntax-highlighting
+    fzf-tab
+    zsh-syntax-highlighting
+    z
     alias-tips
 )
 
 ZSH_COLORIZE_TOOL=chroma
 
 eval $(/opt/homebrew/bin/brew shellenv)
-eval $(thefuck --alias)
 
+#export VISUAL=nvim
+#export EDITOR=nvim
+#export TERM="tmux-256color"
+
+export BROWSER="firefox"
 export LOG4J2_APPENDER=PatternAppender
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
 HIST_STAMPS="yyyy-mm-dd"
-
-export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
 
 HISTORY_IGNORE="(ls|cd|pwd|exit|cd)*"
 setopt EXTENDED_HISTORY      # Write the history file in the ':start:elapsed;command' format.
@@ -66,13 +69,15 @@ export GPG_TTY=$(tty)
 
 eval $(thefuck --alias)
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-export LIMA_HOME="/Users/kiril.vodenicharov/.colima/_lima/"
-export COLIMA_HOME="/Users/kiril.vodenicharov/.colima"
-export DOCKER_HOST="unix://${COLIMA_HOME}/default/docker.sock"
-
 export XDG_CONFIG_HOME=$HOME/.config
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':completion:*' menu select
+
+export LIMA_HOME="$HOME/.colima/_lima/"
+export COLIMA_HOME="$HOME/.colima"
+export TESTCONTAINERS_RYUK_DISABLED=true

@@ -1,0 +1,18 @@
+[user]
+	name = Kiril Vodenicharov
+[core]
+	editor = nvim
+	hooksPath = /Users/kiril.vodenicharov/.global-git-hooks/git-hooks
+[commit]
+	gpgsign = true
+[gpg]
+	program = /opt/homebrew/bin/gpg
+[pull]
+	rebase = true
+[color]
+	ui = auto
+	diff = auto
+[color "branch"]
+    current = blue
+[include]
+    path = ~/.gitconfig-private

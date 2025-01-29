@@ -12,6 +12,7 @@ FILES_TO_SYMLINK=(
     "ghostty/themes:$HOME/.config/ghostty/themes"
     "k9s/skins/kanagawa.yaml:$HOME/.config/k9s/skins/kanagawa.yaml"
     ".tmux.conf:$HOME/.tmux.conf"
+    ".gitconfig:$HOME/.gitconfig"
 )
 
 # Define colors

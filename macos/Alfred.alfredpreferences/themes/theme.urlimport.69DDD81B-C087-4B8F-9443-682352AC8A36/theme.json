@@ -1,0 +1,64 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 5,
+      "subtext" : {
+        "size" : 12,
+        "colorSelected" : "#FFFFFFC4",
+        "font" : "System",
+        "color" : "#CCD0D5FF"
+      },
+      "shortcut" : {
+        "size" : 16,
+        "colorSelected" : "#FFFFFFFF",
+        "font" : "System",
+        "color" : "#98BB6BFF"
+      },
+      "backgroundSelected" : "#223149FF",
+      "text" : {
+        "size" : 18,
+        "colorSelected" : "#C7C092FF",
+        "font" : "System",
+        "color" : "#DCD6BAFF"
+      },
+      "iconPaddingHorizontal" : 4,
+      "roundness" : 8,
+      "paddingVertical" : 3,
+      "iconSize" : 40
+    },
+    "search" : {
+      "backgroundSelected" : "#223149FF",
+      "paddingHorizontal" : 8,
+      "spacing" : 8,
+      "text" : {
+        "size" : 34,
+        "colorSelected" : "#E5C284FF",
+        "font" : "System Light",
+        "color" : "#E5C284FF"
+      },
+      "background" : "#1E1F28FF",
+      "roundness" : 8,
+      "paddingVertical" : 5
+    },
+    "window" : {
+      "color" : "#15161DFF",
+      "paddingHorizontal" : 9,
+      "width" : 662,
+      "borderPadding" : 0,
+      "borderColor" : "#0000007F",
+      "blur" : 15,
+      "roundness" : 9,
+      "paddingVertical" : 8
+    },
+    "credit" : "Mitchell Hanberg",
+    "separator" : {
+      "color" : "#CBCBCBF3",
+      "thickness" : 0
+    },
+    "scrollbar" : {
+      "color" : "#957FB7FF",
+      "thickness" : 2
+    },
+    "name" : "kanagawa (wave)"
+  }
+}

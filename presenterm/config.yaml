@@ -5,7 +5,7 @@ defaults:
   terminal_font_size: 16
 
   # the theme to use by default in every presentation unless overridden.
-  theme: dark
+  theme: tokyonight-storm
 
   # the image protocol to use.
   image_protocol: kitty-local
@@ -35,6 +35,9 @@ options:
 
   # whether to treat a thematic break as a slide end.
   end_slide_shorthand: false
+
+  auto_render_languages:
+    - mermaid
 
 snippet:
   exec:

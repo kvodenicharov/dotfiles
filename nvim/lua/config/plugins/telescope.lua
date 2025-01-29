@@ -13,6 +13,8 @@ return {
 		opts = {
 			defaults = {
 				file_ignore_patterns = { ".git/" },
+				layout_strategy = "horizontal",
+				layout_config = { height = 0.95, preview_width = 0.65 },
 			},
 			pickers = {
 				find_files = {

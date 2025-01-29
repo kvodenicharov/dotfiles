@@ -23,6 +23,7 @@ return {
 			"php",
 			"terraform",
 			"vim",
+			"regex",
 		},
 		sync_install = false,
 		auto_install = true,

@@ -3,7 +3,7 @@
 font-size = 14
 
 # Themes
-theme = "Kanagawa Dragon"
+theme = "Kanagawa Dragon Custom"
 confirm-close-surface = false
 
 # Quick Terminal

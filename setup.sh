@@ -9,6 +9,7 @@ FILES_TO_SYMLINK=(
     "macos/mouseless.yaml:$HOME/Library/Containers/net.sonuscape.mouseless/Data/.mouseless/configs/config.yaml"
     "presenterm/config.yaml:$HOME/.config/presenterm/config.yaml"
     "ghostty/config:$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+    "ghostty/themes:$HOME/.config/ghostty/themes"
     "k9s/skins/kanagawa.yaml:$HOME/.config/k9s/skins/kanagawa.yaml"
     ".tmux.conf:$HOME/.tmux.conf"
 )

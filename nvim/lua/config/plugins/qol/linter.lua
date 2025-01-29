@@ -18,4 +18,3 @@ return {
 		end, { desc = "Lint Trigger" })
 	end,
 }
-

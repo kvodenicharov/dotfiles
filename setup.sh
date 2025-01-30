@@ -11,7 +11,7 @@ FILES_TO_SYMLINK=(
     "ghostty/config:$HOME/Library/Application Support/com.mitchellh.ghostty/config"
     "ghostty:$HOME/.config/ghostty"
     "bat:$HOME/.config/bat"
-    "k9s/skins/kanagawa.yaml:$HOME/.config/k9s/skins/kanagawa.yaml"
+    "k9s:$HOME/.config/k9s"
     ".tmux.conf:$HOME/.tmux.conf"
     ".gitconfig:$HOME/.gitconfig"
 )

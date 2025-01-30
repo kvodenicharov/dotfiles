@@ -21,6 +21,7 @@ require("lazy").setup({
 		{ import = "config.plugins/lsp" },
 		{ import = "config.plugins/qol" },
 		{ import = "config.plugins/visual" },
+		{ import = "config.plugins/org" },
 	},
 	checker = {
 		enabled = true,

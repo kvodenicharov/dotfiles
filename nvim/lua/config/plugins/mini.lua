@@ -2,13 +2,11 @@ return {
 	"echasnovski/mini.nvim",
 	version = false,
 	config = function()
-		require("mini.ai").setup()
-
 		local files = require("mini.files")
 
 		files.setup({
 			windows = {
-				preview = true,
+				preview = false,
 				width_preview = 100,
 			},
 			mappings = {

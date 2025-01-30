@@ -30,6 +30,7 @@ eval $(/opt/homebrew/bin/brew shellenv)
 export VISUAL=nvim
 export EDITOR=nvim
 export TERM=xterm-256color
+export BAT_THEME=kanagawa
 
 export BROWSER="firefox"
 export LOG4J2_APPENDER=PatternAppender

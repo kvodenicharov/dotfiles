@@ -82,3 +82,5 @@ zstyle ':completion:*' menu select
 export LIMA_HOME="$HOME/.colima/_lima/"
 export COLIMA_HOME="$HOME/.colima"
 export TESTCONTAINERS_RYUK_DISABLED=true
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

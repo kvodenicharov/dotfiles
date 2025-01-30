@@ -16,15 +16,24 @@ return {
 						create_todo_items = true,
 					},
 				},
+				["core.completion"] = {
+					config = {
+						engine = "nvim-cmp",
+					},
+				},
 				["core.concealer"] = {},
 				["core.dirman"] = {
 					config = {
 						workspaces = {
 							yotpo = "~/work/org/yotpo",
+							personal = "~/work/org/personal",
 						},
+						index = "index.norg",
 						default_workspace = "yotpo",
 					},
 				},
+				["core.export"] = {},
+				["core.summary"] = {},
 			},
 		})
 

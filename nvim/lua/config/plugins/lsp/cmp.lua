@@ -25,10 +25,6 @@ return {
 				-- Ctrl+Space to trigger completion menu
 				["<C-Space>"] = cmp.mapping.complete(),
 
-				-- Scroll up and down in the completion documentation
-				["<C-u>"] = cmp.mapping.scroll_docs(-4),
-				["<C-d>"] = cmp.mapping.scroll_docs(4),
-
 				["<Tab>"] = cmp.mapping(function(fallback)
 					local col = vim.fn.col(".") - 1
 

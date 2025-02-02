@@ -6,11 +6,8 @@ return {
 		require("neorg").setup({
 			load = {
 				["core.defaults"] = {},
-				["core.esupports.metagen"] = {
-					config = {
-						type = "auto",
-					},
-				},
+				["core.esupports.metagen"] = {},
+				["core.highlights"] = {},
 				["core.qol.todo_items"] = {
 					config = {
 						create_todo_items = true,
@@ -19,6 +16,12 @@ return {
 				["core.completion"] = {
 					config = {
 						engine = "nvim-cmp",
+						name = "[Norg]",
+					},
+				},
+				["core.integrations.nvim-cmp"] = {
+					config = {
+						sources = "neorg",
 					},
 				},
 				["core.concealer"] = {},

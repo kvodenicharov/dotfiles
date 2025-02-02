@@ -6,12 +6,12 @@ font-size = 14
 theme = "Kanagawa Dragon Custom"
 confirm-close-surface = false
 
-# Quick Terminal
-keybind = global:f1=toggle_quick_terminal
-
 #
 shell-integration = zsh
 shell-integration-features = sudo
 
 # command = ~/work/dotfiles/ghostty/start_tmux.sh
 # wait-after-command = true
+
+# Keybinds
+keybind = global:f1=toggle_quick_terminal

@@ -3,6 +3,7 @@
 [core]
 	editor = nvim
 	hooksPath = /Users/kiril.vodenicharov/.global-git-hooks/git-hooks
+    pager = delta
 [commit]
 	gpgsign = true
 [gpg]
@@ -16,3 +17,16 @@
     current = blue
 [include]
     path = ~/.gitconfig-private
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default

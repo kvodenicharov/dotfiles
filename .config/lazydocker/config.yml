@@ -1,0 +1,16 @@
+gui:
+  scrollHeight: 2
+  language: "auto" # one of 'auto' | 'en' | 'pl' | 'nl' | 'de' | 'tr'
+  border: "rounded" # one of 'rounded' | 'single' | 'double' | 'hidden'
+  theme:
+    activeBorderColor:
+      - magenta
+      - bold
+    inactiveBorderColor:
+      - red
+    selectedLineBgColor:
+      - blue
+    optionsTextColor:
+      - blue
+  returnImmediately: true
+  expandFocusedSidePanel: true

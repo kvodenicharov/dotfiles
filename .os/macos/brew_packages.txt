@@ -49,6 +49,7 @@ glib
 gmp
 gnupg
 gnutls
+go@1.22
 gradle
 graphite2
 grc
@@ -76,6 +77,7 @@ kubectl-jq
 kubectx
 kubelogin
 kubernetes-cli
+lazydocker
 lazygit
 leptonica
 libarchive
@@ -152,6 +154,7 @@ nettle
 nginx
 nmap
 npth
+oh-my-posh
 okta-awscli
 okteto
 oniguruma
@@ -195,6 +198,7 @@ shared-mime-info
 siege
 sqlfluff
 sqlite
+stow
 syncthing
 telnet
 terraformer

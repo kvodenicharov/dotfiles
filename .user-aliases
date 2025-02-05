@@ -21,6 +21,8 @@ alias doc='docker-compose'
 alias docu='docker-compose up -d'
 alias doce='docker-compose exec'
 alias d='docker'
+alias dd='lazydocker'
+alias ld='lazydocker'
 
 alias kb="sudo hidutil property --set '{\"UserKeyMapping\":[{\"HIDKeyboardModifierMappingSrc\":0x700000035,\"HIDKeyboardModifierMappingDst\":0x700000064},{\"HIDKeyboardModifierMappingSrc\":0x700000064,\"HIDKeyboardModifierMappingDst\":0x700000035}]}'"
 

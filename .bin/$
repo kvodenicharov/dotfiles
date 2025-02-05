@@ -1,5 +1,11 @@
+#!/bin/bash
 
-#!/bin/zsh
+BOLD='\033[1m'
+BLINK='\033[5m'
+RED='\033[31m'
+BG_RED='\033[41m'
+RESET='\033[0m'
 
-echo 'Quit pasting in commands from the internet, you lazy bum.'
+echo -e "${BLINK}${BOLD}${RED}Quit pasting in commands from the internet, you lazy bum.${RESET}"
+
 "$@"

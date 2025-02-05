@@ -12,6 +12,10 @@ alias f="fuck"
 alias c="pbcopy"
 alias p="pbpaste"
 
+# Git
+alias gg='lazygit'
+alias lg='lazygit'
+
 # DOCKER
 alias doc='docker-compose'
 alias docu='docker-compose up -d'

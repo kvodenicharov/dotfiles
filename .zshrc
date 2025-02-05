@@ -63,7 +63,7 @@ source ~/.user-secrets
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PATH="$HOME/.ops-helpers:/opt/homebrew/opt/openjdk@11/bin:$PATH"
+export PATH="$HOME/.ops-helpers:/opt/homebrew/opt/openjdk@11/bin:$HOME/.bin:$PATH"
 export PATH=$HOME/.ops-helpers:$PATH
 
 export GPG_TTY=$(tty)

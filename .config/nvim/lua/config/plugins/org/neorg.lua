@@ -28,11 +28,10 @@ return {
 				["core.dirman"] = {
 					config = {
 						workspaces = {
-							yotpo = "~/work/org/yotpo",
-							personal = "~/work/org/personal",
+							cells = "~/work/org/cells",
 						},
 						index = "index.norg",
-						default_workspace = "yotpo",
+						default_workspace = "cells",
 					},
 				},
 				["core.export"] = {},

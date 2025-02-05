@@ -97,9 +97,6 @@ setup_symlinks() {
     # Use stow to create symlinks
     if stow -v -R -d . -t ~ .; then
         print_success "Dotfiles linked successfully!"
-        if [[ -d "$backup_dir" && "$(ls -A "$backup_dir")" ]]; then
-            print_warning "Original dotfiles were backed up to: $backup_dir"
-        fi
     else
         print_error "Error linking dotfiles!"
         exit 1

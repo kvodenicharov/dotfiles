@@ -16,7 +16,7 @@
 [color "branch"]
     current = blue
 [include]
-    path = ~/.gitconfig-private
+    path = ~/.gitconfig-secrets
 
 [interactive]
     diffFilter = delta --color-only

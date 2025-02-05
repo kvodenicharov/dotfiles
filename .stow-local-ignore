@@ -2,4 +2,7 @@
 .ignore
 .gitignore
 
-.os
+# Setup files
+install.sh
+
+README.md

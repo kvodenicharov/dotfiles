@@ -6,7 +6,7 @@ return {
 	event = "VeryLazy",
 	opts = {
 		enabled = true,
-		date_format = "%d-%m-%Y %H:%M:%S",
+		date_format = "%d/%m/%y %H:%M",
 		message_template = " <summary> • <date> • <author>",
 	},
 }

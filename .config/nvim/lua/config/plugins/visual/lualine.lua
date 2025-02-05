@@ -34,7 +34,7 @@ return {
 				"encoding",
 				"filetype",
 			},
-			lualine_y = { "location" },
+			lualine_y = { "progress", "location" },
 			lualine_z = {
 				{
 					require("noice").api.status.command.get,

@@ -1,2 +1,8 @@
-nvim/plugin/packer_compiled.lua
-nvim/lazy-lock.json
+# Generic
+*.log
+*cache*
+
+
+# NeoVim
+packer_compiled.lua
+lazy-lock.json

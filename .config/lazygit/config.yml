@@ -1,0 +1,21 @@
+# If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.
+promptToReturnFromSubprocess: false
+
+gui:
+  nerdFontsVersion:
+    "3"
+    # If true, increase the height of the focused side window; creating an accordion effect.
+  expandFocusedSidePanel: true
+
+  # The weight of the expanded side panel, relative to the other panels. 2 means
+  # twice as tall as the other panels. Only relevant if `expandFocusedSidePanel` is true.
+  expandedSidePanelWeight: 2
+
+  theme:
+    # Border color of focused window
+    activeBorderColor:
+      - magenta
+      - bold
+
+    inactiveBorderColor:
+      - red

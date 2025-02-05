@@ -26,24 +26,21 @@ return {
 			},
 		},
 		sections = {
-			lualine_a = { "buffers", "mode" },
+			lualine_a = { "mode" },
 			lualine_b = { "branch", "diff", "diagnostics" },
-			lualine_c = { { "filename", path = 1 } },
+			lualine_c = { { "filename", path = 4 } },
 			lualine_x = {
 				{ require("gitblame").get_current_blame_text, cond = require("gitblame").is_blame_text_available },
 				"encoding",
 				"filetype",
 			},
-			lualine_y = { "progress" },
-			lualine_z = { "location" },
-		},
-		inactive_sections = {
-			lualine_a = {},
-			lualine_b = {},
-			lualine_c = { "filename" },
-			lualine_x = { "location" },
-			lualine_y = {},
-			lualine_z = {},
+			lualine_y = { "location" },
+			lualine_z = {
+				{
+					require("noice").api.status.command.get,
+					cond = require("noice").api.status.command.has,
+				},
+			},
 		},
 		tabline = {},
 		winbar = {},

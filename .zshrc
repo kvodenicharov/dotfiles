@@ -141,3 +141,5 @@ zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':completion:*' menu select
 
 source ~/fzf-git.sh/fzf-git.sh
+
+. "$HOME/.local/bin/env"

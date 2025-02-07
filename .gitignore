@@ -2,6 +2,9 @@
 *.log
 *cache*
 
+.config/uv
+.config/jgit
+.config/fish
 
 # NeoVim
 packer_compiled.lua

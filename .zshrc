@@ -19,7 +19,6 @@ plugins=(
     warhol
     fzf-tab
     zsh-syntax-highlighting
-    z
     alias-tips
 )
 
@@ -141,5 +140,7 @@ zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':completion:*' menu select
 
 source ~/fzf-git.sh/fzf-git.sh
+
+eval "$(zoxide init --cmd cd zsh)"
 
 . "$HOME/.local/bin/env"

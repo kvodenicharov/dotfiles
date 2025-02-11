@@ -8,8 +8,10 @@ return {
 				["core.defaults"] = {},
 				["core.esupports.metagen"] = {},
 				["core.highlights"] = {},
+				["core.todo-introspector"] = {},
 				["core.qol.todo_items"] = {
 					config = {
+						create_todo_parents = true,
 						create_todo_items = true,
 					},
 				},
@@ -35,7 +37,12 @@ return {
 					},
 				},
 				["core.export"] = {},
-				["core.summary"] = {},
+				["core.summary"] = {
+					config = {
+						strategy = "by_path",
+					},
+				},
+				["core.journal"] = {},
 			},
 		})
 

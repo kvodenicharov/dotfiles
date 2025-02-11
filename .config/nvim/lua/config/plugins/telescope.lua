@@ -20,6 +20,9 @@ return {
 				find_files = {
 					hidden = true,
 				},
+				live_grep = {
+					hidden = true,
+				},
 			},
 			extensions = {
 				fzf = {
@@ -32,6 +35,13 @@ return {
 		},
 		config = function(_, opts)
 			local tl = require("telescope")
+			local tlC = require("telescope.config")
+
+			local vg_args = { unpack(tlC.values.vimgrep_arguments) }
+			table.insert(vg_args, "--hidden")
+			table.insert(vg_args, "--glob")
+			table.insert(vg_args, "!**/.git/*")
+			opts.defaults.vimgrep_arguments = vg_args
 
 			tl.setup(opts)
 			tl.load_extension("fzf")

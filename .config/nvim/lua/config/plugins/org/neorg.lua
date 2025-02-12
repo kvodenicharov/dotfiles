@@ -46,6 +46,9 @@ return {
 			},
 		})
 
+		vim.keymap.set("n", "<leader>fnh", "<Plug>(neorg.telescope.search_headings)")
+		vim.keymap.set("n", "<leader>fnf", "<Plug>(neorg.telescope.find_norg_files)")
+
 		vim.keymap.set(
 			"n",
 			"<leader>nlk",

@@ -5,6 +5,7 @@
 .config/uv
 .config/jgit
 .config/fish
+.config/tmux/plugins
 
 # NeoVim
 packer_compiled.lua

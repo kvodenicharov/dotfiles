@@ -1,6 +1,6 @@
 # Font Config
 # font-family = "FiraCode Nerd Font Mono"
-font-size = 14
+font-size = 15
 
 # Themes
 theme = "Kanagawa Wave"
@@ -15,3 +15,4 @@ shell-integration-features = sudo
 keybind = global:f1=toggle_quick_terminal
 
 window-decoration = none
+window-padding-y = 0

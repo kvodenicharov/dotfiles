@@ -10,6 +10,8 @@ gui:
   # The weight of the expanded side panel, relative to the other panels. 2 means
   # twice as tall as the other panels. Only relevant if `expandFocusedSidePanel` is true.
   expandedSidePanelWeight: 2
+  spinner:
+    rate: 500
 
   theme:
     # Border color of focused window

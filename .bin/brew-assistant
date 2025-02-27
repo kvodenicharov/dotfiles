@@ -1,0 +1,385 @@
+#!/bin/bash
+
+# Brew Update Assistant
+# This script shows the changes in new releases of outdated brew packages
+# and asks for confirmation before updating.
+#
+# Usage:
+#   ./brew-update.sh             # Check all outdated packages
+#   ./brew-update.sh package     # Check specific package
+#   ./brew-update.sh --help      # Show help
+
+# ANSI color codes for better readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Check for required commands
+if ! command -v jq &>/dev/null; then
+    echo -e "${RED}Error: jq is required but not installed${NC}"
+    echo "Install it with: brew install jq"
+    exit 1
+fi
+
+# Check for GitHub token
+if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+    echo -e "${YELLOW}Note: GitHub API requests may be rate-limited.${NC}"
+    echo -e "For better results, set a GITHUB_TOKEN environment variable:${NC}"
+    echo -e "export GITHUB_TOKEN=your_github_personal_access_token${NC}"
+    echo ""
+fi
+
+# Function to extract GitHub URL from a string
+extract_github_url() {
+    local input="$1"
+    if [[ "$input" =~ https?://github\.com/([^/]+/[^/]+) ]]; then
+        echo "https://github.com/${BASH_REMATCH[1]}"
+    elif [[ "$input" =~ git@github\.com:([^/]+/[^/]+)\.git ]]; then
+        echo "https://github.com/${BASH_REMATCH[1]}"
+    elif [[ "$input" =~ https?://github\.com/([^/]+/[^/]+)\.git ]]; then
+        echo "https://github.com/${BASH_REMATCH[1]}"
+    else
+        echo ""
+    fi
+}
+
+# Function to find GitHub repo URL from brew info
+find_github_repo() {
+    local package_name="$1"
+    local info=$(brew info --json=v1 "$package_name")
+
+    # Try homepage first
+    local homepage=$(echo "$info" | jq -r ".[0].homepage")
+    local github_url=$(extract_github_url "$homepage")
+    if [[ -n "$github_url" ]]; then
+        echo "$github_url"
+        return
+    fi
+
+    # Try head (for packages installed with --HEAD)
+    local head=$(echo "$info" | jq -r ".[0].head")
+    github_url=$(extract_github_url "$head")
+    if [[ -n "$github_url" ]]; then
+        echo "$github_url"
+        return
+    fi
+
+    # Try URLs field
+    local urls=$(echo "$info" | jq -r ".[0].urls.stable")
+    github_url=$(extract_github_url "$urls")
+    if [[ -n "$github_url" ]]; then
+        echo "$github_url"
+        return
+    fi
+
+    # Try source field if it exists
+    local source=$(echo "$info" | jq -r ".[0].source // empty")
+    if [[ -n "$source" ]]; then
+        github_url=$(extract_github_url "$source")
+        if [[ -n "$github_url" ]]; then
+            echo "$github_url"
+            return
+        fi
+    fi
+
+    # Try tap field if it exists (for tap repositories)
+    local tap=$(echo "$info" | jq -r ".[0].tap // empty")
+    if [[ -n "$tap" && "$tap" =~ ^([^/]+)/([^/]+)$ ]]; then
+        echo "https://github.com/${BASH_REMATCH[1]}/${BASH_REMATCH[2]}"
+        return
+    fi
+
+    # If all else fails, return empty
+    echo ""
+}
+
+# Function to fetch and display release notes between versions
+show_changes() {
+    local package="$1"
+    local current_version="$2"
+    local new_version="$3"
+    local github_repo="$4"
+
+    echo -e "${CYAN}📦 $package:${NC} ${YELLOW}$current_version${NC} → ${GREEN}$new_version${NC}"
+
+    if [[ -z "$github_repo" ]]; then
+        echo -e "${RED}❓ Could not find GitHub repository for $package${NC}"
+        return
+    fi
+
+    echo -e "${BLUE}🔗 Repository:${NC} $github_repo"
+
+    # Try to get the changes
+    if [[ "$github_repo" =~ github\.com/([^/]+)/([^/]+) ]]; then
+        local owner="${BASH_REMATCH[1]}"
+        local repo="${BASH_REMATCH[2]}"
+
+        # Remove .git suffix if present
+        repo=${repo%.git}
+
+        # Try different version formats for comparison URL
+        echo -e "${MAGENTA}📋 Possible comparison links:${NC}"
+        echo "  $github_repo/compare/v$current_version...v$new_version"
+        echo "  $github_repo/compare/$current_version...$new_version"
+
+        # Prepare curl command with proper headers
+        local headers=()
+        headers+=(-H "Accept: application/vnd.github.v3+json")
+        if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+            headers+=(-H "Authorization: Bearer ${GITHUB_TOKEN}")
+        fi
+
+        # URLs to try for release notes
+        local tag_url="https://api.github.com/repos/$owner/$repo/releases/tags/v$new_version"
+        local alt_tag_url="https://api.github.com/repos/$owner/$repo/releases/tags/$new_version"
+        local releases_url="https://api.github.com/repos/$owner/$repo/releases"
+        local latest_url="https://api.github.com/repos/$owner/$repo/releases/latest"
+
+        # Debug information
+        echo -e "${YELLOW}Trying to fetch release notes...${NC}"
+
+        # Try different formats for getting release notes
+        local response=$(curl -s "${headers[@]}" "$tag_url")
+        local release_notes=$(echo "$response" | jq -r ".body")
+
+        if [[ "$release_notes" == "null" || -z "$release_notes" ]]; then
+            echo -e "${YELLOW}No notes at $tag_url, trying alternate tag format...${NC}"
+            response=$(curl -s "${headers[@]}" "$alt_tag_url")
+            release_notes=$(echo "$response" | jq -r ".body")
+        fi
+
+        # If still no notes, search through all releases
+        if [[ "$release_notes" == "null" || -z "$release_notes" ]]; then
+            echo -e "${YELLOW}No notes with direct tag URL, searching all releases...${NC}"
+            # Get all releases and look for a matching tag
+            response=$(curl -s "${headers[@]}" "$releases_url")
+            # Look for a release with tag_name equal to our version (with or without v)
+            release_notes=$(echo "$response" | jq -r ".[] | select(.tag_name == \"v$new_version\" or .tag_name == \"$new_version\") | .body" | head -1)
+        fi
+
+        # If still no notes, try the latest release
+        if [[ "$release_notes" == "null" || -z "$release_notes" ]]; then
+            echo -e "${YELLOW}No specific release found, trying latest release...${NC}"
+            response=$(curl -s "${headers[@]}" "$latest_url")
+            release_notes=$(echo "$response" | jq -r ".body")
+        fi
+
+        # Last resort: try to scrape the release page directly
+        if [[ "$release_notes" == "null" || -z "$release_notes" ]]; then
+            echo -e "${YELLOW}API attempts failed, trying web page scraping...${NC}"
+            # Use curl to fetch the HTML release page and extract markdown content
+            local html_url="$github_repo/releases/tag/v$new_version"
+            local alt_html_url="$github_repo/releases/tag/$new_version"
+
+            # Try with v prefix first - no auth header needed for public pages
+            local html_content=$(curl -s "$html_url")
+            if [[ -n "$html_content" && "$html_content" != *"This is not the web page you are looking for"* ]]; then
+                # Simple extraction - look for the markdown content between specific markers
+                # This is a basic approach and might need adjustment for different GitHub layouts
+                release_notes=$(echo "$html_content" | grep -A 1000 'release-header' | grep -A 1000 'markdown-body' | grep -B 1000 'release-downloads' | sed -n '/<div class="markdown-body">/,/<\/div>/p')
+                # Clean up HTML tags
+                release_notes=$(echo "$release_notes" | sed -e 's/<[^>]*>//g' | grep -v "^$" | head -20)
+            else
+                # Try without v prefix
+                html_content=$(curl -s "$alt_html_url")
+                if [[ -n "$html_content" && "$html_content" != *"This is not the web page you are looking for"* ]]; then
+                    release_notes=$(echo "$html_content" | grep -A 1000 'release-header' | grep -A 1000 'markdown-body' | grep -B 1000 'release-downloads' | sed -n '/<div class="markdown-body">/,/<\/div>/p')
+                    release_notes=$(echo "$release_notes" | sed -e 's/<[^>]*>//g' | grep -v "^$" | head -20)
+                fi
+            fi
+        fi
+
+        if [[ "$release_notes" != "null" && -n "$release_notes" ]]; then
+            echo ""
+            echo -e "${CYAN}📝 Release notes:${NC}"
+            echo "$release_notes" | head -n 20
+            if [[ $(echo "$release_notes" | wc -l) -gt 20 ]]; then
+                echo "... (truncated)"
+                echo -e "${BLUE}Full notes at:${NC} $github_repo/releases"
+            fi
+        else
+            echo -e "${YELLOW}⚠️ Could not fetch release notes. Check the repository for more information.${NC}"
+            echo -e "${BLUE}Releases:${NC} $github_repo/releases"
+        fi
+    fi
+}
+
+# Function to update a package
+update_package() {
+    local package="$1"
+    echo -e "${CYAN}Updating $package...${NC}"
+    if brew upgrade "$package"; then
+        echo -e "${GREEN}✅ $package updated successfully${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ Failed to update $package${NC}"
+        return 1
+    fi
+}
+
+# Function to show usage information
+show_usage() {
+    echo "Usage: $(basename "$0") [package_name]"
+    echo ""
+    echo "Options:"
+    echo "  No arguments: Checks all outdated packages and prompts for updates"
+    echo "  package_name: Shows release notes and prompts to update just that package"
+}
+
+# Main script
+# Check if a specific package name was provided
+if [[ $# -eq 1 ]]; then
+    if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+        show_usage
+        exit 0
+    fi
+
+    package_name="$1"
+    echo -e "${BLUE}🔍 Checking package: ${CYAN}$package_name${NC}"
+
+    # Check if the package is installed
+    if ! brew list "$package_name" &>/dev/null; then
+        echo -e "${RED}❌ Package '$package_name' is not installed${NC}"
+        echo -e "Install it with: ${YELLOW}brew install $package_name${NC}"
+        exit 1
+    fi
+
+    # Get current version and available version
+    info=$(brew info --json=v1 "$package_name")
+    current_version=$(echo "$info" | jq -r ".[0].installed[0].version")
+    new_version=$(echo "$info" | jq -r ".[0].versions.stable")
+
+    # Check if package is outdated or user wants to see release notes anyway
+    if brew outdated | grep -q "^$package_name"; then
+        echo -e "${YELLOW}📦 Package '$package_name' is outdated${NC}"
+        is_outdated=true
+    else
+        echo -e "${GREEN}✅ Package '$package_name' is up to date (version: $current_version)${NC}"
+        read -p "Would you like to see the release notes anyway? (y/n) " show_notes
+        if [[ "$show_notes" == "y" || "$show_notes" == "Y" ]]; then
+            is_outdated=false
+        else
+            exit 0
+        fi
+    fi
+
+    # Show release notes
+    github_repo=$(find_github_repo "$package_name")
+    show_changes "$package_name" "$current_version" "$new_version" "$github_repo"
+
+    # If the package is outdated, ask to update
+    if [[ "$is_outdated" == "true" ]]; then
+        echo ""
+        read -p "🔄 Update $package_name to $new_version? (y/n) " choice
+        case "$choice" in
+        y | Y)
+            update_package "$package_name"
+            ;;
+        *)
+            echo -e "${YELLOW}⏭️ Skipping update${NC}"
+            ;;
+        esac
+    fi
+
+    exit 0
+fi
+
+# If no specific package was provided, check all outdated packages
+echo -e "${BLUE}🔍 Checking for all outdated packages...${NC}"
+outdated_packages=$(brew outdated)
+
+if [[ -z "$outdated_packages" ]]; then
+    echo -e "${GREEN}✅ All packages are up to date!${NC}"
+    exit 0
+fi
+
+echo -e "${YELLOW}📦 Found outdated packages:${NC}"
+echo "$outdated_packages"
+echo ""
+
+# Ask if user wants to update all packages at once
+echo -e "${CYAN}How would you like to proceed?${NC}"
+echo "  [a] Update all packages"
+echo "  [i] Interactive (review each package)"
+echo "  [q] Quit"
+read -p "Choose an option [i]: " global_choice
+global_choice=${global_choice:-i}
+
+case "$global_choice" in
+a | A)
+    # Show changes for all packages first
+    echo -e "${YELLOW}Changes for all packages:${NC}"
+    for package in $outdated_packages; do
+        # Get package info
+        info=$(brew info --json=v1 "$package")
+
+        # Extract current and new versions
+        current_version=$(echo "$info" | jq -r ".[0].installed[0].version")
+        new_version=$(echo "$info" | jq -r ".[0].versions.stable")
+
+        # Find GitHub repository
+        github_repo=$(find_github_repo "$package")
+
+        # Show changes
+        show_changes "$package" "$current_version" "$new_version" "$github_repo"
+        echo ""
+    done
+
+    # Confirm before proceeding
+    read -p "Proceed with updating all packages? (y/n) " confirm
+    if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+        echo -e "${YELLOW}Updating all packages...${NC}"
+        brew upgrade
+        echo -e "${GREEN}✨ All packages updated!${NC}"
+    else
+        echo -e "${RED}❌ Update canceled${NC}"
+    fi
+    exit 0
+    ;;
+q | Q)
+    echo -e "${RED}❌ Exiting${NC}"
+    exit 0
+    ;;
+*)
+    # Continue with interactive mode
+    ;;
+esac
+
+# Process each outdated package
+for package in $outdated_packages; do
+    # Get package info
+    info=$(brew info --json=v1 "$package")
+
+    # Extract current and new versions
+    current_version=$(echo "$info" | jq -r ".[0].installed[0].version")
+    new_version=$(echo "$info" | jq -r ".[0].versions.stable")
+
+    # Find GitHub repository
+    github_repo=$(find_github_repo "$package")
+
+    # Show changes
+    show_changes "$package" "$current_version" "$new_version" "$github_repo"
+
+    # Prompt user
+    echo ""
+    read -p "🔄 Update $package to $new_version? (y/n/q) " choice
+    case "$choice" in
+    y | Y)
+        update_package "$package"
+        ;;
+    q | Q)
+        echo -e "${RED}❌ Exiting${NC}"
+        exit 0
+        ;;
+    *)
+        echo -e "${YELLOW}⏭️ Skipping $package${NC}"
+        ;;
+    esac
+    echo ""
+done
+
+echo -e "${GREEN}✨ Done checking updates!${NC}"

@@ -11,10 +11,17 @@ return {
 				delay = 100,
 				reveal = { "close" },
 			},
-			offset = {
-				filetype = "undotree",
-				text = "UndoTree",
-				separator = true,
+			offsets = {
+				{
+					filetype = "undotree",
+					text = "UndoTree",
+					separator = true,
+				},
+				{
+					filetype = "NvimTree",
+					text = "File Explorer",
+					separator = true,
+				},
 			},
 		},
 	},

@@ -1,0 +1,223 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <input_csv_file> [output_json_file]"
+    echo "Example: $0 transactions.csv output.json"
+    exit 1
+fi
+
+INPUT_FILE="$1"
+
+OUTPUT_FILE="${2:-output.json}"
+
+# Check if input file exists
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: Input file '$INPUT_FILE' not found."
+    exit 1
+fi
+
+# Generate a random UUID for account
+ACCOUNT_ID="9c16930d-ac16-4080-8aea-f84e20ae12c8"
+
+# Current date in ISO format
+CURRENT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+
+# Create the meta section of the JSON
+echo '{
+  "meta": {
+    "date": "'$CURRENT_DATE'",
+    "version": "dev"
+  },
+  "platforms": [
+    {
+      "id": "67308bdc-f09f-446c-b37f-4e69fc6cb464",
+      "name": "Trading212",
+      "url": "https://www.trading212.com/"
+    }
+  ],
+  "accounts": [
+    {
+      "balance": 0,
+      "comment": null,
+      "currency": "USD",
+      "id": "9c16930d-ac16-4080-8aea-f84e20ae12c8",
+      "isExcluded": false,
+      "name": "Trading212",
+      "platformId": "67308bdc-f09f-446c-b37f-4e69fc6cb464"
+    }
+  ],
+  "activities": [' > "$OUTPUT_FILE"
+
+# Function to convert date format (YYYY-MM-DD HH:MM:SS to YYYY-MM-DDT00:00:00.000Z)
+format_date() {
+  local date_str=$1
+  local date_part=$(echo "$date_str" | cut -d' ' -f1)
+
+  # Parse the date
+  local year=$(echo "$date_part" | cut -d'-' -f1)
+  local month=$(echo "$date_part" | cut -d'-' -f2)
+  local day=$(echo "$date_part" | cut -d'-' -f3)
+
+  # Return ISO date string
+  echo "${year}-${month}-${day}T00:00:00.000Z"
+}
+
+# Function to convert currency to USD based on transaction date
+convert_to_usd() {
+  local amount=$1
+  local currency=$2
+  local date_str=$3
+
+  # Return 0 if amount is empty or not a number
+  if [[ -z "$amount" || ! "$amount" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    echo "0"
+    return
+  fi
+
+  # Return amount if currency is already USD
+  if [[ "$currency" == "USD" ]]; then
+    echo "$amount"
+    return
+  fi
+
+  # Extract year from the date string
+  local year=$(echo "$date_str" | cut -d'-' -f1)
+
+  # Set default rate
+  local rate=1.0
+
+  # EUR to USD rates
+  if [[ "$currency" == "EUR" ]]; then
+    case "$year" in
+      2019) rate=1.12 ;;
+      2020) rate=1.14 ;;
+      2021) rate=1.18 ;;
+      2022) rate=1.05 ;;
+      2023) rate=1.08 ;;
+      2024) rate=1.08 ;;
+      2025) rate=1.07 ;;
+      *) rate=1.10 ;;
+    esac
+
+  # GBP to USD rates
+  elif [[ "$currency" == "GBP" ]]; then
+    case "$year" in
+      2019) rate=1.28 ;;
+      2020) rate=1.29 ;;
+      2021) rate=1.38 ;;
+      2022) rate=1.23 ;;
+      2023) rate=1.24 ;;
+      2024) rate=1.28 ;;
+      2025) rate=1.30 ;;
+      *) rate=1.28 ;;
+    esac
+
+  # GBX to USD rates (GBX is 1/100 of GBP)
+  elif [[ "$currency" == "GBX" ]]; then
+    case "$year" in
+      2019) rate=0.0128 ;;
+      2020) rate=0.0129 ;;
+      2021) rate=0.0138 ;;
+      2022) rate=0.0123 ;;
+      2023) rate=0.0124 ;;
+      2024) rate=0.0128 ;;
+      2025) rate=0.0130 ;;
+      *) rate=0.0128 ;;
+    esac
+  fi
+
+  # Calculate converted amount
+  local result=$(echo "$amount * $rate" | bc -l)
+  printf "%.6f" "$result"
+}
+
+# Process the CSV file line by line and create JSON entries
+awk -F, 'NR>1 {print}' "$INPUT_FILE" | while IFS=, read -r action time isin ticker name notes id shares price price_currency exchange_rate result_currency total total_currency withholding withholding_currency charge charge_currency deposit deposit_currency conversion conversion_currency; do
+  # Skip empty rows
+  if [[ -z "$action" || -z "$time" ]]; then
+    continue
+  fi
+
+  # Skip deposit and interest records
+  if [[ "$action" == *"Deposit"* || "$action" == *"Interest"* || "$action" == *"Card"* || "$action" == *"Spending"* ]]; then
+    continue
+  fi
+
+  # Extract the code/ticker
+  symbol=${isin:-$ticker}
+
+  # Determine action type
+  if [[ "$action" == *"buy"* ]]; then
+    type="BUY"
+  elif [[ "$action" == *"Dividend"* ]]; then
+    type="DIVIDEND"
+  elif [[ "$action" == *"Market sell"* ]]; then
+    type="SELL"
+  else
+    echo "PANIC: Unknown action type $action";
+    exit 1;
+  fi
+
+  # Get the price and currency
+  price=${price//\"/}
+  original_currency=${price_currency//\"/}
+
+  # Format date
+  formatted_date=$(format_date "$time")
+
+  # Convert price to USD
+  unit_price=$(convert_to_usd "$price" "$original_currency" "$time")
+
+  # Create comment
+  if [[ -n "$name" ]]; then
+    comment="${name//\"/} (Original: ${price} ${original_currency})"
+  else
+    comment="(Original: ${price} ${original_currency})"
+  fi
+
+  # Determine fee and its currency
+  fee=0
+  fee_currency=""
+
+  if [[ -n "$conversion" && "$conversion" != "\"\"" ]]; then
+    fee=${conversion//\"/}
+    fee_currency=${conversion_currency//\"/}
+  elif [[ -n "$deposit" && "$deposit" != "\"\"" ]]; then
+    fee=${deposit//\"/}
+    fee_currency=${deposit_currency//\"/}
+  elif [[ -n "$charge" && "$charge" != "\"\"" ]]; then
+    fee=${charge//\"/}
+    fee_currency=${charge_currency//\"/}
+  fi
+
+  # Convert fee to USD
+  usd_fee=$(convert_to_usd "$fee" "$fee_currency" "$time")
+
+  # Format the quantity
+  quantity=${shares//\"/}
+
+  # Create JSON for this transaction
+  cat >> "$OUTPUT_FILE" << EOL
+    {
+      "accountId": "$ACCOUNT_ID",
+      "comment": "$comment",
+      "fee": $usd_fee,
+      "quantity": $quantity,
+      "type": "$type",
+      "unitPrice": $unit_price,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "$formatted_date",
+      "symbol": "$symbol"
+    },
+EOL
+
+done
+
+# Remove the last comma and close the JSON structure
+sed -i '$ s/,$//' "$OUTPUT_FILE"
+echo '  ]
+}' >> "$OUTPUT_FILE"
+
+echo "JSON data has been written to $OUTPUT_FILE"
+echo "Processed $(grep -c "accountId" "$OUTPUT_FILE") transactions from $INPUT_FILE"

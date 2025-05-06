@@ -1,0 +1,422 @@
+#!/bin/bash
+
+# Binance CSV to Ghostfolio JSON converter with CoinGecko API integration
+# Simplified version for tracking only: tron, ethereum, bitcoin, solana, cardano, bnb
+# Dependencies: jq, awk, sed, bc, curl
+
+# Check for input file argument
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <binance_csv_file> [output_json_file]"
+    echo "Example: $0 binance_transactions.csv ghostfolio_import.json"
+    exit 1
+fi
+
+# Input file from first argument
+INPUT_FILE="$1"
+
+# Output file is second argument or defaults to ghostfolio_import.json
+OUTPUT_FILE="${2:-ghostfolio_import.json}"
+
+# Check if input file exists
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: Input file '$INPUT_FILE' not found."
+    exit 1
+fi
+
+# Check if required tools are installed
+for cmd in jq curl bc sed awk; do
+    if ! command -v $cmd &> /dev/null; then
+        echo "Error: $cmd is not installed. Please install it and try again."
+        exit 1
+    fi
+done
+
+ACCOUNT_ID="447cb85a-38fd-4791-88d2-53f9e64ec461"
+
+PLATFORM_ID="c9e03e12-5f40-402b-bd19-2e3713b292f1"
+
+# CoinGecko API base URL
+COINGECKO_API="https://pro-api.coingecko.com/api/v3"
+
+# Create a cache directory for price data
+CACHE_DIR="/tmp/coin_price_cache"
+mkdir -p "$CACHE_DIR"
+
+# Check if COINGECKO_API_KEY is set in environment and use it if available
+if [ -n "$COINGECKO_API_KEY" ]; then
+    API_KEY_PARAM="&x_cg_pro_api_key=${COINGECKO_API_KEY}"
+    echo "Using CoinGecko API key for requests"
+else
+    API_KEY_PARAM=""
+    echo "No CoinGecko API key found. Using public API with rate limits."
+    echo "For better results, set the COINGECKO_API_KEY environment variable."
+fi
+
+# Current date in ISO format
+CURRENT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+
+# Create the meta section of the JSON
+echo '{
+  "meta": {
+    "date": "'$CURRENT_DATE'",
+    "version": "dev"
+  },
+  "platforms": [
+    {
+      "id": "'$PLATFORM_ID'",
+      "name": "Binance",
+      "url": "https://www.binance.com/"
+    }
+  ],
+  "accounts": [
+    {
+      "balance": 0,
+      "comment": null,
+      "currency": "USD",
+      "id": "'$ACCOUNT_ID'",
+      "isExcluded": false,
+      "name": "Binance",
+      "platformId": "'$PLATFORM_ID'"
+    }
+  ],
+  "activities": [' > "$OUTPUT_FILE"
+
+# Function to convert date format (YYYY-MM-DD HH:MM:SS to YYYY-MM-DDT00:00:00.000Z)
+format_date() {
+  local date_str=$1
+  
+  # Parse the date (assuming format YYYY-MM-DD HH:MM:SS)
+  local year=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f1)
+  local month=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f2)
+  local day=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f3)
+  
+  # Return ISO date string
+  echo "${year}-${month}-${day}T00:00:00.000Z"
+}
+
+# Function to convert date to UNIX timestamp
+to_unix_timestamp() {
+  local date_str=$1
+  
+  # Parse the date (assuming format YYYY-MM-DD HH:MM:SS)
+  if command -v date &> /dev/null; then
+    # Use date command if available
+    date -d "$date_str" +%s 2>/dev/null || echo "0"
+  else
+    # Fallback method if date command not available
+    local year=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f1)
+    local month=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f2)
+    local day=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f3)
+    
+    # Simple calculation for timestamp (approximate)
+    echo $(( (year - 1970) * 31536000 + (month - 1) * 2592000 + (day - 1) * 86400 ))
+  fi
+}
+
+# Map Binance coin symbol to CoinGecko ID - Simplified for only 6 cryptocurrencies
+map_coin_to_coingecko_id() {
+  local coin=$1
+  
+  case "$coin" in
+    BTC) echo "bitcoin" ;;
+    TRX) echo "tron" ;;
+    ETH) echo "ethereum" ;;
+    ADA) echo "cardano" ;;
+    SOL) echo "solana" ;;
+    BNB) echo "binancecoin" ;;
+    USDT) echo "tether" ;;  # Added for conversion pairs
+    BUSD) echo "binance-usd" ;;  # Added for conversion pairs
+    EUR) echo "euro" ;;  # For fiat operations
+    BGN) echo "bulgarian-lev" ;;  # For fiat operations
+    *) 
+      echo "ERROR: Unsupported coin type: $coin - only tracking BTC, TRX, ETH, ADA, SOL, BNB"
+      exit 1
+  esac
+}
+
+# Function to get cryptocurrency prices from CoinGecko API
+get_crypto_price() {
+  local coin=$1
+  local date_str=$2
+  local vs_currency="usd"
+  
+  # Map the coin symbol to CoinGecko ID
+  local coin_id=$(map_coin_to_coingecko_id "$coin")
+  
+  # Parse the date (assuming format YYYY-MM-DD HH:MM:SS)
+  local date_only=$(echo "$date_str" | cut -d' ' -f1)
+  
+  # Format date for CoinGecko API (DD-MM-YYYY)
+  local year=$(echo "$date_only" | cut -d'-' -f1)
+  local month=$(echo "$date_only" | cut -d'-' -f2)
+  local day=$(echo "$date_only" | cut -d'-' -f3)
+  local coingecko_date="${day}-${month}-${year}"
+  
+  # Create cache file path
+  local cache_file="${CACHE_DIR}/${coin_id}_${date_only}_${vs_currency}.json"
+  
+  # Check if we already have cached data
+  if [ -f "$cache_file" ]; then
+    # Use cached data
+    local price=$(cat "$cache_file")
+    echo "$price"
+    return
+  fi
+  
+  # If coin is a fiat currency, handle it specially
+  case "$coin" in
+    EUR)
+      # EUR/USD conversion rates by year (approximation)
+      local year=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f1)
+      case "$year" in
+        2019) local price="1.12" ;;
+        2020) local price="1.14" ;;
+        2021) local price="1.18" ;;
+        2022) local price="1.05" ;;
+        2023) local price="1.08" ;;
+        2024) local price="1.08" ;;
+        2025) local price="1.07" ;;
+        *) local price="1.10" ;;
+      esac
+      echo "$price" > "$cache_file"
+      echo "$price"
+      return
+      ;;
+    BGN)
+      # BGN/USD conversion rates by year (approximation)
+      local year=$(echo "$date_str" | cut -d' ' -f1 | cut -d'-' -f1)
+      local price="0.60"  # Default
+      echo "$price" > "$cache_file"
+      echo "$price"
+      return
+      ;;
+  esac
+  
+  # For non-fiat currencies, try to get historical price from CoinGecko
+  # API endpoint for historical data
+  local endpoint="${COINGECKO_API}/coins/${coin_id}/history?date=${coingecko_date}${API_KEY_PARAM}"
+  
+  # Use curl to fetch data
+  local response=""
+  response=$(curl -s "$endpoint")
+  
+  # Check if response contains market data
+  echo "${coin} - ${coin_id} - $(echo "$response" | jq -r '.market_data.current_price.usd')"
+  if echo "$response" | grep -q "market_data"; then
+    local price=$(echo "$response" | jq -r '.market_data.current_price.usd')
+  else
+    echo $endpoint;
+    echo "PANIC: Could not fetch history data";
+    exit 1;
+  fi
+  
+  # Cache the result
+  echo "$price" > "$cache_file"
+  
+  echo "$price"
+}
+
+format_number() {
+  local number=$1
+
+  # Use awk to reliably parse both standard and scientific notation
+  number=$(awk -v val="$number" 'BEGIN { printf "%.10f", (val < 0 ? -val : val) }')
+
+  echo "$number"
+}
+
+# Function to display a progress bar
+show_progress() {
+  local current=$1
+  local total=$2
+  local width=${3:-50} # Default width of 50 characters
+  
+  # Calculate percentage
+  local percent=$(( (current * 100) / total ))
+  
+  # Calculate the filled bar width
+  local filled_width=$(( (width * current) / total ))
+  
+  # Create the progress bar
+  local bar="["
+  for ((i = 0; i < width; i++)); do
+    if [ $i -lt $filled_width ]; then
+      bar+="="
+    else
+      bar+=" "
+    fi
+  done
+  bar+="] $percent% ($current/$total)"
+  
+  # Print the progress bar (overwrite the same line)
+  echo -ne "\r$bar"
+  
+  # Print a newline when complete
+  if [ $current -eq $total ]; then
+    echo ""
+  fi
+}
+
+# Map Binance operation to Ghostfolio activity type
+map_operation_type() {
+  local operation=$1
+  local change=$2
+  
+  # Determine if it's an inflow (positive change) or outflow (negative change)
+  local is_outflow=false
+  if [[ "$change" =~ ^- ]]; then
+    is_outflow=true
+  fi
+  
+  # Map operation types
+  case "$operation" in
+    "Buy") echo "BUY" ;;
+    "Sell") echo "SELL" ;;
+    "Deposit") echo "BUY" ;;
+    "Withdraw") echo "SELL" ;;
+    "Binance Convert")
+      if [[ "$is_outflow" == "true" ]]; then
+        echo "SELL"
+      else
+        echo "BUY"
+      fi
+      ;;
+    "Transaction Related")
+      if [[ "$is_outflow" == "true" ]]; then
+        echo "SELL"
+      else
+        echo "BUY"
+      fi
+      ;;
+    "Fee") echo "FEE" ;;
+    "Simple Earn Flexible Interest") echo "DIVIDEND" ;;
+    "Simple Earn Locked Rewards") echo "DIVIDEND" ;;
+    "Staking Rewards") echo "DIVIDEND" ;;
+    "BNB Vault Rewards") echo "DIVIDEND" ;;
+    "Distribution") echo "DIVIDEND" ;;
+    "HODLer Airdrops Distribution") echo "DIVIDEND" ;;
+    "Airdrop Assets") echo "DIVIDEND" ;;
+    "Launchpool Airdrop") echo "DIVIDEND" ;;
+    "Launchpool Earnings Withdrawal") echo "DIVIDEND" ;;
+    "Auto-Invest Transaction")
+      if [[ "$is_outflow" == "true" ]]; then
+        echo "SELL"
+      else
+        echo "BUY"
+      fi
+      ;;
+    "Buy Crypto With Card") echo "BUY" ;;
+    "Convert Fiat to Crypto OCBS") echo "BUY" ;;
+    "Deposit Fiat OCBS") echo "BUY" ;;
+    "Fiat OCBS - Add Fiat and Fees") echo "BUY" ;;
+    "Staking Purchase") echo "SELL" ;;
+    "Asset - Transfer")
+      if [[ "$is_outflow" == "true" ]]; then
+        echo "SELL"
+      else
+        echo "BUY"
+      fi
+      ;;
+    "Simple Earn Flexible Subscription") echo "DIVIDEND" ;;
+    "Simple Earn Flexible Redemption") echo "DIVIDEND" ;;
+    "Asset Recovery") echo "SELL" ;;
+    "Token Swap - Distribution") echo "BUY" ;;
+    "Staking Redemption") echo "BUY" ;;
+    "Token Swap - Redenomination/Rebranding") echo "SELL" ;;
+    *)
+      echo "ERROR: Unknown operation type: $operation"
+      exit 1
+      ;;
+  esac
+}
+
+# Count total number of records for progress bar
+TOTAL_RECORDS=$(awk -F, 'NR>1 {count++} END {print count}' "$INPUT_FILE")
+CURRENT_RECORD=0
+
+echo "Processing $TOTAL_RECORDS transactions from $INPUT_FILE..."
+echo "Fetching historical price data from CoinGecko API (this may take some time)..."
+echo "Only processing transactions for BTC, TRX, ETH, ADA, SOL, BNB..."
+
+# Process the CSV file line by line and create JSON entries
+awk -F, 'NR>1 {print}' "$INPUT_FILE" | sed 's/"//g' | while IFS=, read -r user_id utc_time account operation coin change remark; do
+  # Skip rows with empty values
+  if [[ -z "$utc_time" || -z "$operation" ]]; then
+    CURRENT_RECORD=$((CURRENT_RECORD + 1))
+    show_progress $CURRENT_RECORD $TOTAL_RECORDS
+    continue
+  fi
+
+  # Skip coins that are not in our list
+  # Only process BTC, TRX, ETH, ADA, SOL, BNB and common pairs USDT, BUSD, EUR, BGN
+  if [[ ! "$coin" =~ ^(BTC|TRX|ETH|ADA|SOL|BNB|USDT|BUSD|EUR|BGN)$ ]]; then
+    CURRENT_RECORD=$((CURRENT_RECORD + 1))
+    show_progress $CURRENT_RECORD $TOTAL_RECORDS
+    continue
+  fi
+
+  # Get the mapped Ghostfolio activity type
+  type=$(map_operation_type "$operation" "$change")
+  
+  # Check if we got an error
+  if [[ "$type" == ERROR* ]]; then
+    echo -e "\n$type"
+    exit 1
+  fi
+  
+  # Format date to ISO format
+  formatted_date=$(format_date "$utc_time")
+  
+  # Extract the symbol
+  symbol=$(map_coin_to_coingecko_id "$coin")
+  
+  # Format the quantity (remove negative sign for sells)
+  quantity=$(format_number "$change")
+
+  unit_price=$(get_crypto_price "$coin" "$utc_time")
+  unit_price=$(format_number "$unit_price")
+  
+  fee="0.000000"
+  
+  # Create comment from the operation and remark
+  if [[ -n "$remark" ]]; then
+    comment="$operation: $remark"
+  else
+    comment="$operation"
+  fi
+  
+  # Create JSON for this transaction
+  cat >> "$OUTPUT_FILE" << EOL
+    {
+      "accountId": "$ACCOUNT_ID",
+      "comment": "$comment",
+      "fee": $fee,
+      "quantity": $quantity,
+      "type": "$type",
+      "unitPrice": $unit_price,
+      "currency": "USD",
+      "dataSource": "COINGECKO",
+      "date": "$formatted_date",
+      "symbol": "$symbol"
+    },
+EOL
+
+  # Update progress
+  CURRENT_RECORD=$((CURRENT_RECORD + 1))
+  show_progress $CURRENT_RECORD $TOTAL_RECORDS
+done
+
+# If the script exited early due to an error, don't finalize the JSON file
+if [ $? -ne 0 ]; then
+  echo "Error occurred during processing. JSON file not finalized."
+  exit 1
+fi
+
+# Remove the last comma and close the JSON structure
+sed -i '$ s/,$//' "$OUTPUT_FILE"
+echo '  ]
+}' >> "$OUTPUT_FILE"
+
+echo "JSON data has been written to $OUTPUT_FILE"
+echo "Successfully processed $(grep -c "accountId" "$OUTPUT_FILE") transactions"
+echo "Price data was cached in $CACHE_DIR"

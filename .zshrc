@@ -77,7 +77,7 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 export LIMA_HOME="$HOME/.colima/_lima/"
 export COLIMA_HOME="$HOME/.colima"
-export TESTCONTAINERS_RYUK_DISABLED=true
+export DOCKER_HOST="unix:///$COLIMA_HOME/default/docker.sock"
 
 source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -144,3 +144,4 @@ source ~/fzf-git.sh/fzf-git.sh
 eval "$(zoxide init --cmd cd zsh)"
 
 . "$HOME/.local/bin/env"
+export TESTCONTAINERS_RYUK_DISABLED=true

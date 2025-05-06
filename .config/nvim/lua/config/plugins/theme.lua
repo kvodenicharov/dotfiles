@@ -15,6 +15,38 @@ return {
 		end,
 	},
 	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		opts = {
+			integrations = {
+				alpha = true,
+				fzf = true,
+				harpoon = true,
+				indent_blankline = {
+					enabled = true,
+				},
+				mini = {
+					enabled = true,
+				},
+				noice = true,
+				cmp = true,
+				notify = true,
+				nvim_surround = true,
+				treesitter = true,
+				rainbow_delimiters = true,
+				snacks = {
+					enabled = true,
+				},
+				which_key = true,
+			},
+		},
+		config = function(_, opts)
+			require("catppuccin").setup(opts)
+			vim.cmd.colorscheme("catppuccin")
+		end,
+	},
+	{
 		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
@@ -42,8 +74,7 @@ return {
 		},
 		config = function(_, opts)
 			require("kanagawa").setup(opts)
-
-			vim.cmd([[colorscheme kanagawa]])
+			--vim.cmd([[colorscheme kanagawa]])
 		end,
 	},
 }

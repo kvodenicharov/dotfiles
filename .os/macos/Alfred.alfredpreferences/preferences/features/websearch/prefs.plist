@@ -26,6 +26,17 @@
 			<key>url</key>
 			<string>https://backoffice.yotpo.com/#/stores?search={query}</string>
 		</dict>
+		<key>8AF40145-1F2C-4796-8553-6A6A0089CE7E</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>r</string>
+			<key>text</key>
+			<string>Yotpo Roadie</string>
+			<key>url</key>
+			<string>https://yotpo.roadie.so/search?query={query}</string>
+		</dict>
 		<key>D0A5A2D3-51FF-407F-9B45-4CF3DD353B69</key>
 		<dict>
 			<key>enabled</key>

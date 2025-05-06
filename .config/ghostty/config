@@ -3,7 +3,7 @@
 font-size = 15
 
 # Themes
-theme = "Kanagawa Wave"
+theme = light:"catppuccin-latte",dark:"catppuccin-mocha"
 confirm-close-surface = false
 
 #
@@ -13,6 +13,7 @@ shell-integration-features = sudo
 
 # Keybinds
 keybind = global:f1=toggle_quick_terminal
+keybind = ctrl+z=toggle_split_zoom
 
-window-decoration = none
+gtk-tabs-location = bottom
 window-padding-y = 0

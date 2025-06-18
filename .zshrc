@@ -29,7 +29,6 @@ eval $(/opt/homebrew/bin/brew shellenv)
 export VISUAL=nvim
 export EDITOR=nvim
 export TERM=xterm-256color
-export BAT_THEME=kanagawa
 
 export BROWSER="firefox"
 export LOG4J2_APPENDER=PatternAppender
@@ -81,15 +80,6 @@ export DOCKER_HOST="unix:///$COLIMA_HOME/default/docker.sock"
 
 source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# --- setup fzf theme ---
-fg="#CBE0F0"
-bg="#011628"
-bg_highlight="#143652"
-purple="#B388FF"
-blue="#06BCE4"
-cyan="#2CF9ED"
-
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 

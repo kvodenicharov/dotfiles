@@ -1,6 +1,9 @@
 # If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.
 promptToReturnFromSubprocess: false
 
+git:
+  overrideGpg: true
+
 gui:
   nerdFontsVersion:
     "3"

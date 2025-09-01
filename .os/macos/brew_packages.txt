@@ -203,6 +203,7 @@ snappy
 sqlfluff
 sqlite
 stow
+symfony-cli
 syncthing
 telnet
 terraformer

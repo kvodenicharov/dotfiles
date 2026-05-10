@@ -1,5 +1,6 @@
 [user]
 	name = Kiril Vodenicharov
+	email = kirilvodenicharov@gmail.com
 [core]
 	editor = nvim
 [color]

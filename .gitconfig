@@ -2,14 +2,6 @@
 	name = Kiril Vodenicharov
 [core]
 	editor = nvim
-	hooksPath = /Users/kiril.vodenicharov/.global-git-hooks/git-hooks
-    pager = delta
-[commit]
-	gpgsign = true
-[gpg]
-	program = /opt/homebrew/bin/gpg
-[pull]
-	rebase = true
 [color]
 	ui = auto
 	diff = auto
@@ -17,18 +9,3 @@
     current = blue
 [include]
     path = ~/.gitconfig-secrets
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true
-    side-by-side = true
-
-[merge]
-    conflictstyle = diff3
-
-[diff]
-    colorMoved = default
-[fetch]
-	prune = true

@@ -9,9 +9,6 @@ alias v="vim"
 
 alias f="fuck"
 
-alias c="pbcopy"
-alias p="pbpaste"
-
 # Git
 alias gg='lazygit'
 alias lg='lazygit'
@@ -23,9 +20,3 @@ alias doce='docker-compose exec'
 alias d='docker'
 alias dd='lazydocker'
 alias ld='lazydocker'
-
-alias kb="sudo hidutil property --set '{\"UserKeyMapping\":[{\"HIDKeyboardModifierMappingSrc\":0x700000035,\"HIDKeyboardModifierMappingDst\":0x700000064},{\"HIDKeyboardModifierMappingSrc\":0x700000064,\"HIDKeyboardModifierMappingDst\":0x700000035}]}'"
-
-t() {
-    tail -f "$1" | bat --paging=never --color=always -l log
-}

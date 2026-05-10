@@ -16,22 +16,18 @@ plugins=(
 	git
 	thefuck
 	sudo
-    warhol
-    fzf-tab
-    zsh-syntax-highlighting
-    alias-tips
+	warhol
+	fzf-tab
+	zsh-syntax-highlighting
+	alias-tips
 )
 
-ZSH_COLORIZE_TOOL=chroma
-
-eval $(/opt/homebrew/bin/brew shellenv)
+source $ZSH/oh-my-zsh.sh
 
 export VISUAL=nvim
 export EDITOR=nvim
 export TERM=xterm-256color
 
-export BROWSER="firefox"
-export LOG4J2_APPENDER=PatternAppender
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000000
@@ -51,32 +47,10 @@ setopt APPEND_HISTORY        # append to history file (Default)
 setopt HIST_NO_STORE         # Don't store history commands
 setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
 
-eval "$(fnm env --use-on-cd --shell zsh)"
-
-export FZF_DEFAULT_OPTS='--height=40% --preview="cat {}" --preview-window=right:60%:wrap'
-
-source $ZSH/oh-my-zsh.sh
 source ~/.user-aliases
 source ~/.user-secrets
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-export PATH="$HOME/.ops-helpers:/opt/homebrew/opt/openjdk@11/bin:$HOME/.bin:$PATH"
-export PATH=$HOME/.ops-helpers:$PATH
-
-export GPG_TTY=$(tty)
-
-eval $(thefuck --alias)
-
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-export XDG_CONFIG_HOME=$HOME/.config
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-export LIMA_HOME="$HOME/.colima/_lima/"
-export COLIMA_HOME="$HOME/.colima"
-export DOCKER_HOST="unix:///$COLIMA_HOME/default/docker.sock"
 
 source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -129,9 +103,4 @@ _fzf_compgen_dir() {
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':completion:*' menu select
 
-source ~/fzf-git.sh/fzf-git.sh
-
 eval "$(zoxide init --cmd cd zsh)"
-
-. "$HOME/.local/bin/env"
-export TESTCONTAINERS_RYUK_DISABLED=true

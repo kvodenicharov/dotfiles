@@ -21,3 +21,7 @@ alias doce='docker-compose exec'
 alias d='docker'
 alias dd='lazydocker'
 alias ld='lazydocker'
+
+# Cell Home wifi band control (shared SSID across 2.4/5 GHz)
+alias wifi5='nmcli connection modify "Cell Home" wifi.band a && nmcli connection up "Cell Home"'
+alias wifiauto='nmcli connection modify "Cell Home" wifi.band "" && nmcli connection up "Cell Home"'
